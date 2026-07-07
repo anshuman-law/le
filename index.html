@@ -6,219 +6,166 @@
   <title>The Rule Machine | Law and Economics Lab</title>
   <style>
     :root {
-      --bg: #0f172a;
+      --bg: #0b1020;
       --panel: #111827;
-      --panel-2: #1e293b;
+      --panel2: #1e293b;
+      --panel3: #0f172a;
       --text: #f8fafc;
       --muted: #cbd5e1;
+      --soft: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.14);
       --accent: #38bdf8;
-      --accent-2: #facc15;
-      --good: #22c55e;
-      --warn: #f59e0b;
-      --bad: #ef4444;
-      --border: rgba(255, 255, 255, 0.12);
-      --shadow: rgba(0, 0, 0, 0.35);
+      --accent2: #facc15;
+      --green: #22c55e;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --violet: #a78bfa;
+      --shadow: rgba(0,0,0,0.38);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+
+    html, body { height: 100%; }
 
     body {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(250, 204, 21, 0.12), transparent 35%),
-        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       color: var(--text);
-      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(56, 189, 248, 0.18), transparent 32%),
+        radial-gradient(circle at 90% 15%, rgba(167, 139, 250, 0.16), transparent 30%),
+        radial-gradient(circle at 60% 95%, rgba(250, 204, 21, 0.10), transparent 34%),
+        var(--bg);
+      overflow-x: hidden;
     }
 
     header {
-      padding: 18px 28px;
+      position: sticky;
+      top: 0;
+      z-index: 30;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 18px;
+      padding: 16px 24px;
+      background: rgba(11,16,32,0.82);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(8px);
-      position: sticky;
-      top: 0;
-      z-index: 10;
     }
 
-    .brand {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
+    .brand { display: grid; gap: 3px; }
 
     .brand h1 {
       margin: 0;
-      font-size: clamp(1.4rem, 2.4vw, 2.2rem);
-      letter-spacing: -0.04em;
+      font-size: clamp(1.25rem, 2vw, 2rem);
+      letter-spacing: -0.05em;
     }
 
     .brand span {
       color: var(--muted);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
     }
 
-    .top-actions {
+    .controls {
       display: flex;
+      align-items: center;
+      justify-content: flex-end;
       gap: 10px;
       flex-wrap: wrap;
-      justify-content: flex-end;
     }
 
     button {
       border: 0;
       border-radius: 999px;
-      padding: 10px 16px;
-      font-weight: 750;
-      cursor: pointer;
       color: var(--text);
-      background: var(--panel-2);
-      transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
-      box-shadow: 0 8px 24px var(--shadow);
+      background: var(--panel2);
+      font-weight: 800;
+      padding: 10px 15px;
+      cursor: pointer;
+      transition: transform .14s ease, background .14s ease, outline .14s ease, opacity .14s ease;
+      box-shadow: 0 10px 26px var(--shadow);
+      font-family: inherit;
     }
 
-    button:hover {
-      transform: translateY(-1px);
-      background: #334155;
-    }
+    button:hover { transform: translateY(-1px); background: #334155; }
+    button:active { transform: translateY(0); }
+    button.primary { background: linear-gradient(135deg, #0284c7, #38bdf8); color: #04111f; }
+    button.yellow { background: linear-gradient(135deg, #b45309, #facc15); color: #111827; }
+    button.ghost { background: transparent; border: 1px solid var(--border); box-shadow: none; }
 
-    button.primary {
-      background: linear-gradient(135deg, #0284c7, #38bdf8);
-      color: #04111f;
-    }
-
-    button.warning {
-      background: linear-gradient(135deg, #b45309, #facc15);
-      color: #111827;
-    }
-
-    button.ghost {
-      background: transparent;
-      border: 1px solid var(--border);
-      box-shadow: none;
+    .counter {
+      color: var(--muted);
+      font-weight: 900;
+      min-width: 64px;
+      text-align: right;
     }
 
     main {
-      width: min(1180px, calc(100% - 28px));
-      margin: 22px auto 80px;
+      width: min(1250px, calc(100% - 28px));
+      margin: 22px auto 76px;
     }
 
-    .screen {
-      display: none;
-      animation: fadeIn 0.25s ease;
+    .screen { display: none; animation: fade .25s ease; }
+    .screen.active { display: block; }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    .screen.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .card, .hero-card {
+      background: linear-gradient(180deg, rgba(30,41,59,.94), rgba(15,23,42,.94));
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      box-shadow: 0 26px 80px var(--shadow);
+      padding: clamp(22px, 4vw, 44px);
     }
 
     .hero {
-      min-height: 66vh;
+      min-height: 70vh;
       display: grid;
       align-items: center;
-      gap: 24px;
-    }
-
-    .hero-card,
-    .card {
-      background: linear-gradient(180deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.92));
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: clamp(24px, 4vw, 48px);
-      box-shadow: 0 24px 70px var(--shadow);
     }
 
     .hero h2 {
-      font-size: clamp(2.5rem, 6vw, 5.4rem);
-      line-height: 0.92;
-      letter-spacing: -0.08em;
-      margin: 0 0 22px;
+      margin: 0 0 18px;
+      font-size: clamp(2.8rem, 7vw, 6.4rem);
+      line-height: .88;
+      letter-spacing: -0.09em;
     }
 
-    .hero p {
+    .hero p, .lead {
+      max-width: 900px;
       color: var(--muted);
-      max-width: 850px;
-      font-size: clamp(1.1rem, 2vw, 1.45rem);
+      font-size: clamp(1.08rem, 1.8vw, 1.42rem);
       line-height: 1.55;
+      margin: 0;
     }
 
     .big-question {
       margin-top: 28px;
-      padding: 22px;
-      border-left: 6px solid var(--accent);
-      background: rgba(56, 189, 248, 0.08);
-      border-radius: 20px;
-      font-size: clamp(1.15rem, 2.2vw, 1.65rem);
-      font-weight: 800;
-    }
-
-    .concept-flow {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 14px;
-      margin-top: 28px;
-    }
-
-    .flow-box {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border);
+      padding: 22px 24px;
       border-radius: 22px;
-      padding: 22px 14px;
-      min-height: 110px;
-      display: grid;
-      place-items: center;
-      text-align: center;
-      font-weight: 850;
-      font-size: clamp(1rem, 1.4vw, 1.3rem);
-      position: relative;
+      border-left: 7px solid var(--accent);
+      background: rgba(56,189,248,.09);
+      font-size: clamp(1.18rem, 2.3vw, 1.75rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
     }
 
-    .flow-box:not(:last-child)::after {
-      content: "→";
-      position: absolute;
-      right: -17px;
-      color: var(--accent-2);
-      font-size: 2rem;
-      z-index: 2;
-    }
-
-    .round-title {
+    .screen-head {
       display: flex;
-      align-items: flex-start;
       justify-content: space-between;
-      gap: 18px;
+      align-items: flex-start;
+      gap: 22px;
       margin-bottom: 22px;
     }
 
-    .round-title h2 {
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      margin: 0;
-      letter-spacing: -0.06em;
-    }
-
-    .round-title p {
-      color: var(--muted);
-      font-size: 1.1rem;
-      line-height: 1.5;
-      max-width: 760px;
+    .screen-head h2 {
+      margin: 8px 0 8px;
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      line-height: 1;
+      letter-spacing: -0.07em;
     }
 
     .tag {
@@ -226,314 +173,334 @@
       align-items: center;
       gap: 8px;
       padding: 8px 13px;
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.35);
+      background: rgba(56,189,248,.12);
+      border: 1px solid rgba(56,189,248,.35);
       color: #bae6fd;
       border-radius: 999px;
-      font-weight: 800;
+      font-weight: 900;
       white-space: nowrap;
+      width: fit-content;
     }
 
+    .tag.yellow { background: rgba(250,204,21,.11); border-color: rgba(250,204,21,.35); color: #fef08a; }
+    .tag.green { background: rgba(34,197,94,.12); border-color: rgba(34,197,94,.35); color: #bbf7d0; }
+    .tag.violet { background: rgba(167,139,250,.12); border-color: rgba(167,139,250,.35); color: #ddd6fe; }
+
     .scenario {
-      font-size: clamp(1.1rem, 1.8vw, 1.45rem);
-      line-height: 1.55;
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 22px;
+      margin: 20px 0;
       padding: 22px;
       border: 1px solid var(--border);
-      margin-bottom: 22px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.055);
+      color: var(--text);
+      font-size: clamp(1.05rem, 1.55vw, 1.3rem);
+      line-height: 1.55;
+    }
+
+    .concept-flow {
+      margin-top: 30px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 14px;
+    }
+
+    .flow-box {
+      min-height: 116px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(255,255,255,.06);
+      font-weight: 950;
+      font-size: clamp(1rem, 1.35vw, 1.25rem);
+      position: relative;
+    }
+
+    .flow-box:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -18px;
+      color: var(--accent2);
+      font-size: 2rem;
+      z-index: 3;
     }
 
     .choices {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 14px;
       margin-top: 18px;
     }
 
     .choice {
-      text-align: left;
-      border-radius: 22px;
-      padding: 18px;
-      background: rgba(255, 255, 255, 0.07);
       border: 1px solid var(--border);
-      box-shadow: none;
+      border-radius: 23px;
+      background: rgba(255,255,255,.065);
       min-height: 118px;
-      display: flex;
-      flex-direction: column;
+      padding: 18px;
+      display: grid;
       gap: 8px;
+      text-align: left;
+      box-shadow: none;
+      align-content: start;
     }
 
-    .choice:hover {
-      background: rgba(56, 189, 248, 0.12);
-      transform: translateY(-2px);
-    }
+    .choice:hover { background: rgba(56,189,248,.13); transform: translateY(-2px); }
+    .choice.selected { outline: 3px solid var(--accent); background: rgba(56,189,248,.18); }
+    .choice strong { font-size: 1.08rem; }
+    .choice span { color: var(--muted); font-weight: 560; line-height: 1.45; }
 
-    .choice.selected {
-      outline: 3px solid var(--accent);
-      background: rgba(56, 189, 248, 0.18);
-    }
-
-    .choice strong {
-      font-size: 1.15rem;
-    }
-
-    .choice span {
-      font-weight: 500;
-      color: var(--muted);
-      line-height: 1.45;
-    }
-
-    .result-panel {
-      display: none;
-      margin-top: 24px;
-      background: rgba(15, 23, 42, 0.88);
+    .result {
+      margin-top: 22px;
+      padding: 22px;
       border: 1px solid var(--border);
       border-radius: 26px;
-      padding: 24px;
+      background: rgba(2,6,23,.58);
+      display: none;
+    }
+    .result.visible { display: block; animation: fade .2s ease; }
+
+    .result h3 {
+      margin: 0 0 8px;
+      font-size: clamp(1.35rem, 2vw, 1.9rem);
+      letter-spacing: -0.03em;
     }
 
-    .result-panel.visible {
-      display: block;
-      animation: fadeIn 0.25s ease;
-    }
-
-    .result-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      align-items: flex-start;
-      margin-bottom: 20px;
-    }
-
-    .result-head h3 {
-      margin: 0;
-      font-size: clamp(1.45rem, 2.4vw, 2.1rem);
-    }
-
-    .result-head p {
-      color: var(--muted);
-      margin: 8px 0 0;
-      font-size: 1.05rem;
-      line-height: 1.55;
-    }
+    .result p { color: var(--muted); margin: 0; line-height: 1.55; font-size: 1.05rem; }
 
     .bars {
+      margin-top: 18px;
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 14px 22px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 15px 22px;
     }
 
-    .bar-row {
-      display: grid;
-      gap: 8px;
-    }
+    .bar-row { display: grid; gap: 8px; }
+    .bar-label { display: flex; justify-content: space-between; font-weight: 900; gap: 12px; }
+    .bar-bg { height: 16px; border-radius: 999px; background: rgba(255,255,255,.10); overflow: hidden; }
+    .bar-fill { height: 100%; width: 0%; border-radius: 999px; transition: width .65s ease; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
 
-    .bar-label {
-      display: flex;
-      justify-content: space-between;
-      font-weight: 800;
-      color: var(--text);
-    }
-
-    .bar-bg {
-      height: 17px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.1);
-      overflow: hidden;
-    }
-
-    .bar-fill {
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      transition: width 0.65s ease;
-      background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    }
-
-    .teaching-point {
-      margin-top: 22px;
-      padding: 18px;
-      border-radius: 20px;
-      background: rgba(250, 204, 21, 0.09);
-      border: 1px solid rgba(250, 204, 21, 0.25);
+    .idea-box {
+      margin-top: 20px;
+      padding: 18px 20px;
+      border-radius: 22px;
+      border: 1px solid rgba(250,204,21,.25);
+      background: rgba(250,204,21,.09);
       color: #fef9c3;
-      font-size: 1.08rem;
+      font-size: 1.05rem;
       line-height: 1.55;
+      font-weight: 650;
     }
 
-    .simulation-layout {
+    .two-col {
       display: grid;
-      grid-template-columns: 1.35fr 0.8fr;
+      grid-template-columns: 1.1fr .9fr;
       gap: 18px;
       align-items: stretch;
     }
 
-    .canvas-wrap {
-      background: #020617;
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      overflow: hidden;
-      min-height: 390px;
+    .visual-wrap {
       position: relative;
+      min-height: 420px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: #020617;
+      overflow: hidden;
     }
 
-    canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
+    canvas { display: block; width: 100%; height: 100%; }
 
-    .sim-overlay {
+    .visual-label {
       position: absolute;
       top: 16px;
       left: 16px;
-      background: rgba(2, 6, 23, 0.72);
-      border: 1px solid var(--border);
-      border-radius: 18px;
+      max-width: 420px;
       padding: 12px 14px;
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,.75);
       color: var(--muted);
-      font-weight: 750;
-      max-width: 360px;
+      font-weight: 850;
+      line-height: 1.4;
+      z-index: 4;
     }
 
     .dashboard {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--border);
-      border-radius: 26px;
       padding: 20px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: rgba(255,255,255,.052);
     }
 
     .dashboard h3 {
-      margin-top: 0;
+      margin: 0 0 16px;
       font-size: 1.55rem;
+      letter-spacing: -0.04em;
+    }
+
+    .metric { display: grid; gap: 8px; margin-bottom: 15px; }
+    .metric-top { display: flex; justify-content: space-between; gap: 10px; font-weight: 900; }
+    .meter { height: 15px; border-radius: 999px; overflow: hidden; background: rgba(255,255,255,.10); }
+    .meter div { height: 100%; width: 0%; border-radius: 999px; transition: width .55s ease; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+
+    .formula-card {
+      margin-top: 18px;
+      padding: 18px;
+      border: 1px solid rgba(56,189,248,.28);
+      border-radius: 22px;
+      background: rgba(56,189,248,.08);
+      color: #bae6fd;
+      font-weight: 900;
+      text-align: center;
+      font-size: clamp(1.2rem, 2.2vw, 1.8rem);
       letter-spacing: -0.03em;
     }
 
-    .metric {
+    .sliders { display: grid; gap: 18px; margin-top: 20px; }
+    .slider-row { display: grid; gap: 10px; }
+    .slider-row label { display: flex; justify-content: space-between; font-weight: 900; gap: 12px; }
+    input[type="range"] { width: 100%; accent-color: var(--accent); }
+
+    .table-wrap { overflow-x: auto; border-radius: 22px; border: 1px solid var(--border); margin-top: 20px; }
+    table { width: 100%; border-collapse: collapse; min-width: 720px; background: rgba(2,6,23,.42); }
+    th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid rgba(255,255,255,.09); vertical-align: top; }
+    th { color: #bae6fd; font-size: .95rem; text-transform: uppercase; letter-spacing: .05em; }
+    td { color: var(--muted); line-height: 1.4; }
+    tr:last-child td { border-bottom: 0; }
+
+    .comparison-grid {
       display: grid;
-      gap: 7px;
-      margin-bottom: 15px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
     }
 
-    .metric-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      font-weight: 800;
+    .mini-card {
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: rgba(255,255,255,.055);
+      padding: 18px;
+      min-height: 155px;
     }
 
-    .meter {
-      height: 14px;
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 999px;
+    .mini-card h3 { margin: 0 0 8px; color: #bae6fd; font-size: 1.2rem; }
+    .mini-card p { margin: 0; color: var(--muted); line-height: 1.48; }
+
+    .triangle-wrap {
+      min-height: 460px;
+      display: grid;
+      place-items: center;
+      position: relative;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: rgba(255,255,255,.045);
+      margin-top: 20px;
       overflow: hidden;
     }
 
-    .meter > div {
-      height: 100%;
-      width: 0%;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #38bdf8, #facc15);
-      transition: width 0.55s ease;
+    .trade-square {
+      width: min(680px, 92%);
+      aspect-ratio: 1 / .62;
+      position: relative;
+      border: 3px solid rgba(56,189,248,.55);
+      border-radius: 34px;
+      background:
+        linear-gradient(135deg, rgba(56,189,248,.08), transparent 45%),
+        linear-gradient(315deg, rgba(250,204,21,.08), transparent 45%);
+      box-shadow: inset 0 0 60px rgba(255,255,255,.03);
     }
 
-    .formula {
-      margin-top: 18px;
-      padding: 15px;
-      border-radius: 18px;
-      background: rgba(56, 189, 248, 0.08);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      color: #bae6fd;
-      font-weight: 800;
-      line-height: 1.5;
-    }
-
-    .synthesis-grid {
+    .trade-node {
+      position: absolute;
+      transform: translate(-50%, -50%);
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
+      place-items: center;
+      width: 174px;
+      min-height: 72px;
+      padding: 10px;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      background: rgba(2,6,23,.84);
+      color: var(--text);
+      font-weight: 950;
+      text-align: center;
+      box-shadow: 0 16px 32px var(--shadow);
+    }
+
+    .n1 { left: 0%; top: 0%; }
+    .n2 { left: 100%; top: 0%; }
+    .n3 { left: 0%; top: 100%; }
+    .n4 { left: 100%; top: 100%; }
+
+    .center-note {
+      position: absolute;
+      inset: 33% 18%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.5vw, 1.25rem);
+      line-height: 1.45;
+      font-weight: 800;
+    }
+
+    .conclusion-list {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
       gap: 16px;
-      margin-top: 22px;
+      margin-top: 24px;
     }
 
     .lesson {
-      background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border);
-      border-radius: 22px;
+      border-radius: 24px;
+      background: rgba(255,255,255,.055);
       padding: 20px;
       min-height: 130px;
+      display: grid;
+      align-content: start;
+      gap: 8px;
     }
+    .lesson h3 { margin: 0; color: #bae6fd; font-size: 1.28rem; }
+    .lesson p { margin: 0; color: var(--muted); line-height: 1.45; }
 
-    .lesson h3 {
-      margin: 0 0 8px;
-      color: #bae6fd;
-      font-size: 1.35rem;
-    }
-
-    .lesson p {
+    .status-pill {
+      display: inline-flex;
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.09);
       color: var(--muted);
-      line-height: 1.5;
-      margin: 0;
-      font-size: 1.04rem;
+      font-weight: 900;
+      margin-top: 12px;
     }
 
     footer {
       position: fixed;
-      bottom: 0;
       left: 0;
       right: 0;
-      padding: 8px 18px;
-      font-size: 0.78rem;
-      color: rgba(248, 250, 252, 0.55);
+      bottom: 0;
+      z-index: 40;
+      padding: 8px 16px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      background: rgba(11,16,32,.82);
+      backdrop-filter: blur(10px);
+      color: rgba(248,250,252,.58);
+      font-size: .78rem;
       text-align: center;
-      background: rgba(15, 23, 42, 0.76);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(8px);
-      z-index: 20;
     }
 
-    .slide-count {
-      color: var(--muted);
-      font-weight: 800;
-    }
-
-    .hidden {
-      display: none;
-    }
-
-    @media (max-width: 900px) {
-      header {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .concept-flow {
-        grid-template-columns: 1fr;
-      }
-
-      .flow-box:not(:last-child)::after {
-        content: "↓";
-        right: 50%;
-        bottom: -28px;
-        top: auto;
-        transform: translateX(50%);
-      }
-
-      .choices,
-      .bars,
-      .simulation-layout,
-      .synthesis-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .canvas-wrap {
-        min-height: 330px;
-      }
-
-      .round-title {
-        flex-direction: column;
-      }
+    @media (max-width: 980px) {
+      header { align-items: flex-start; flex-direction: column; }
+      .screen-head, .two-col { grid-template-columns: 1fr; flex-direction: column; }
+      .choices, .bars, .comparison-grid, .conclusion-list { grid-template-columns: 1fr; }
+      .concept-flow { grid-template-columns: 1fr; }
+      .flow-box:not(:last-child)::after { content: "↓"; right: 50%; bottom: -29px; top: auto; transform: translateX(50%); }
+      .visual-wrap { min-height: 360px; }
+      .trade-node { width: 142px; font-size: .9rem; }
+      .center-note { inset: 30% 20%; }
     }
   </style>
 </head>
@@ -541,47 +508,36 @@
   <header>
     <div class="brand">
       <h1>The Rule Machine</h1>
-      <span>Law and Economics Lab · Incentives, Costs, Compliance, Consequences</span>
+      <span>Law and Economics Lab · Rules, incentives, costs, behaviour, consequences</span>
     </div>
-    <div class="top-actions">
-      <button class="ghost" onclick="previousScreen()">← Previous</button>
-      <button class="primary" onclick="nextScreen()">Next →</button>
-      <button class="warning" onclick="resetLab()">Reset Lab</button>
-      <span class="slide-count" id="slideCount"></span>
+    <div class="controls">
+      <button class="ghost" onclick="go(-1)">← Previous</button>
+      <button class="primary" onclick="go(1)">Next →</button>
+      <button class="yellow" onclick="resetAll()">Reset</button>
+      <span class="counter" id="counter"></span>
     </div>
   </header>
 
   <main>
-    <!-- Screen 1 -->
-    <section class="screen active" id="screen-0">
+    <section class="screen active">
       <div class="hero">
         <div class="hero-card">
           <h2>The Rule Machine</h2>
-          <p>
-            A guided classroom simulation on how legal rules shape incentives,
-            behaviour, costs, compliance, and social outcomes.
-          </p>
-          <div class="big-question">
-            What happens when law changes the cost of behaviour?
-          </div>
+          <p>A three-story simulation for understanding how legal rules shape incentives, costs, compliance, allocation, and social outcomes.</p>
+          <div class="big-question">What happens when law changes the cost of behaviour?</div>
         </div>
       </div>
     </section>
 
-    <!-- Screen 2 -->
-    <section class="screen" id="screen-1">
+    <section class="screen">
       <div class="card">
-        <div class="round-title">
+        <div class="screen-head">
           <div>
-            <span class="tag">Core idea</span>
-            <h2>Law is also a behavioural instrument.</h2>
-            <p>
-              In law and economics, we ask not only what a legal rule says, but what
-              it does after people, firms, institutions, and regulators respond to it.
-            </p>
+            <span class="tag">Core map</span>
+            <h2>From legal rule to social outcome</h2>
+            <p class="lead">Law-and-economics reasoning follows the movement from rule design to behavioural consequence.</p>
           </div>
         </div>
-
         <div class="concept-flow">
           <div class="flow-box">Legal Rule</div>
           <div class="flow-box">Incentives</div>
@@ -589,895 +545,911 @@
           <div class="flow-box">Social Outcome</div>
           <div class="flow-box">Trade-offs</div>
         </div>
-
-        <div class="teaching-point">
-          “Whenever we design a legal rule, we should ask:
-          What behaviour will this rule encourage, discourage, or accidentally create?”
-        </div>
+        <div class="idea-box">The central shift: from reading rules as commands to analysing rules as systems that change costs, choices, and responses.</div>
       </div>
     </section>
 
-    <!-- Screen 3: Parking -->
-    <section class="screen" id="screen-2">
+    <section class="screen">
       <div class="card">
-        <div class="round-title">
+        <div class="screen-head">
           <div>
-            <span class="tag">Round 1 · Scarcity and Allocation</span>
+            <span class="tag yellow">Story 1 · Scarcity and allocation</span>
             <h2>The Parking Problem</h2>
-            <p>
-              The college has 100 parking applicants but only 40 parking slots.
-              The administration must choose one rule.
-            </p>
+            <p class="lead">A law college has 100 applicants for parking, but only 40 parking slots. The administration must choose one rule.</p>
           </div>
         </div>
-
-        <div class="scenario">
-          Scarcity means not everyone can get what they want. The legal or administrative
-          rule will decide who receives access, who is excluded, and what behaviour people
-          adopt in response.
-        </div>
-
+        <div class="scenario">Scarcity means that not everyone can receive what they want. The rule decides access, exclusion, priority, administrative burden, and behavioural response.</div>
         <div class="choices" id="parkingChoices"></div>
-
-        <div class="result-panel" id="parkingResult"></div>
+        <div class="result" id="parkingChoiceResult"></div>
       </div>
     </section>
 
-    <!-- Screen 4: Speeding -->
-    <section class="screen" id="screen-3">
+    <section class="screen">
       <div class="card">
-        <div class="round-title">
+        <div class="screen-head">
           <div>
-            <span class="tag">Round 2 · Deterrence and Enforcement</span>
+            <span class="tag yellow">Story 1 · Allocation animation</span>
+            <h2>Who gets the 40 slots?</h2>
+            <p class="lead">The selected allocation rule determines how applicants move into the available slots.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="visual-wrap">
+            <canvas id="parkingCanvas"></canvas>
+            <div class="visual-label" id="parkingLabel">Select a parking rule on the previous screen or use the choices below.</div>
+          </div>
+          <div class="dashboard">
+            <h3>Parking Dashboard</h3>
+            <div id="parkingMetrics"></div>
+            <div class="idea-box" id="parkingIdea">Allocation rules distribute scarce resources and also generate responses such as queueing, bidding, over-application, exaggeration, or informal trading.</div>
+          </div>
+        </div>
+        <div class="choices" id="parkingChoices2"></div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag yellow">Story 1 · Second-order response</span>
+            <h2>The rule does not end the story.</h2>
+            <p class="lead">Once the rule is known, people adapt to it. These responses become part of the legal-economic analysis.</p>
+          </div>
+        </div>
+        <div class="result visible" id="parkingDeepResult"></div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag green">Story 2 · Deterrence and enforcement</span>
             <h2>The Speeding Problem</h2>
-            <p>
-              A city road has frequent speeding and accidents. The authority wants
-              to reduce speeding without creating unnecessary costs.
-            </p>
+            <p class="lead">A city road has frequent speeding and accidents. The authority wants to reduce speeding without creating unnecessary costs.</p>
           </div>
         </div>
-
-        <div class="simulation-layout">
-          <div class="canvas-wrap">
-            <canvas id="roadCanvas" width="900" height="480"></canvas>
-            <div class="sim-overlay" id="simOverlay">
-              Select a rule to watch the road behaviour change.
-            </div>
-          </div>
-
-          <aside class="dashboard">
-            <h3>Live Dashboard</h3>
-
-            <div class="metric">
-              <div class="metric-top">
-                <span>Speeding Rate</span>
-                <span id="mSpeeding">65%</span>
-              </div>
-              <div class="meter"><div id="barSpeeding"></div></div>
-            </div>
-
-            <div class="metric">
-              <div class="metric-top">
-                <span>Accident Risk</span>
-                <span id="mAccidents">70%</span>
-              </div>
-              <div class="meter"><div id="barAccidents"></div></div>
-            </div>
-
-            <div class="metric">
-              <div class="metric-top">
-                <span>Enforcement Cost</span>
-                <span id="mEnforcement">10%</span>
-              </div>
-              <div class="meter"><div id="barEnforcement"></div></div>
-            </div>
-
-            <div class="metric">
-              <div class="metric-top">
-                <span>Compliance Level</span>
-                <span id="mCompliance">35%</span>
-              </div>
-              <div class="meter"><div id="barCompliance"></div></div>
-            </div>
-
-            <div class="formula">
-              Deterrence depends on both penalty and probability of being caught.
-            </div>
-          </aside>
-        </div>
-
+        <div class="scenario">Drivers respond not only to what the law prohibits, but to the expected cost of violation: the size of the penalty and the perceived chance of being caught.</div>
         <div class="choices" id="speedChoices"></div>
+        <div class="result" id="speedChoiceResult"></div>
+      </div>
+    </section>
 
-        <div class="result-panel visible" id="speedResult">
-          <div class="result-head">
-            <div>
-              <h3>Baseline road condition</h3>
-              <p>
-                Many drivers speed because the perceived cost of speeding is low.
-                Choose a rule below and observe how incentives change.
-              </p>
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag green">Story 2 · Road animation</span>
+            <h2>Watch deterrence operate.</h2>
+            <p class="lead">Cars, accidents, compliance, public convenience, and enforcement cost respond to the selected rule.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="visual-wrap">
+            <canvas id="roadCanvas"></canvas>
+            <div class="visual-label" id="roadLabel">Select a speeding rule on the previous screen or use the choices below.</div>
+          </div>
+          <div class="dashboard">
+            <h3>Road Dashboard</h3>
+            <div id="roadMetrics"></div>
+          </div>
+        </div>
+        <div class="choices" id="speedChoices2"></div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag green">Story 2 · Expected cost</span>
+            <h2>Severity is not enough.</h2>
+            <p class="lead">Deterrence depends on both punishment and enforcement credibility.</p>
+          </div>
+        </div>
+        <div class="formula-card">Expected cost of violation = penalty × probability of being caught</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Rule</th><th>Penalty</th><th>Probability of detection</th><th>Likely deterrence</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Low fine, low enforcement</td><td>Low</td><td>Low</td><td>Weak</td></tr>
+              <tr><td>High fine, low enforcement</td><td>High</td><td>Low</td><td>Medium</td></tr>
+              <tr><td>Moderate fine, regular enforcement</td><td>Medium</td><td>Medium/High</td><td>Strong</td></tr>
+              <tr><td>Speed breakers and road design</td><td>Not penalty-based</td><td>Built into the environment</td><td>Strong, but convenience falls</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="idea-box">A severe law that is rarely enforced may deter less than a moderate law that is consistently enforced.</div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag green">Story 2 · Deterrence control room</span>
+            <h2>Change the ingredients.</h2>
+            <p class="lead">Adjust fine, detection probability, enforcement intensity, and road design. The road responds live.</p>
+          </div>
+        </div>
+        <div class="two-col">
+          <div class="visual-wrap">
+            <canvas id="controlRoadCanvas"></canvas>
+            <div class="visual-label" id="controlRoadLabel">Adjust the controls to change the road.</div>
+          </div>
+          <div class="dashboard">
+            <h3>Controls</h3>
+            <div class="sliders">
+              <div class="slider-row"><label>Fine amount <span id="fineVal">₹2,000</span></label><input id="fineSlider" type="range" min="500" max="10000" step="500" value="2000"></div>
+              <div class="slider-row"><label>Detection probability <span id="detectVal">30%</span></label><input id="detectSlider" type="range" min="5" max="70" step="5" value="30"></div>
+              <div class="slider-row"><label>Enforcement intensity <span id="enforceVal">45%</span></label><input id="enforceSlider" type="range" min="0" max="100" step="5" value="45"></div>
+              <div class="slider-row"><label>Road design intervention <span id="designVal">20%</span></label><input id="designSlider" type="range" min="0" max="100" step="5" value="20"></div>
             </div>
+            <div id="controlMetrics"></div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Screen 5: Factory -->
-    <section class="screen" id="screen-4">
+    <section class="screen">
       <div class="card">
-        <div class="round-title">
+        <div class="screen-head">
           <div>
-            <span class="tag">Round 3 · Externalities and Liability</span>
+            <span class="tag violet">Story 3 · Externalities and social cost</span>
             <h2>The Factory Pollution Problem</h2>
-            <p>
-              A factory produces useful goods and creates jobs, but it pollutes a nearby river.
-              The law must decide who should bear the cost of pollution.
-            </p>
+            <p class="lead">A factory produces useful goods and employs local workers, but it pollutes a nearby river.</p>
           </div>
         </div>
-
-        <div class="scenario">
-          An externality arises when one person or firm’s activity imposes costs on others.
-          If the legal system does nothing, the factory may not fully account for the social
-          cost of pollution.
-        </div>
-
-        <div class="choices" id="factoryChoices"></div>
-
-        <div class="result-panel" id="factoryResult"></div>
+        <div class="scenario">An externality exists when the private activity of one actor imposes costs on others. The legal response determines where those costs fall.</div>
+        <div class="choices" id="pollutionChoices"></div>
+        <div class="result" id="pollutionChoiceResult"></div>
       </div>
     </section>
 
-    <!-- Screen 6: Synthesis -->
-    <section class="screen" id="screen-5">
+    <section class="screen">
       <div class="card">
-        <div class="round-title">
+        <div class="screen-head">
           <div>
-            <span class="tag">Final synthesis</span>
-            <h2>What did the Rule Machine show?</h2>
-            <p>
-              Across parking, speeding, and pollution, the central lesson is that legal
-              rules produce behavioural consequences.
-            </p>
+            <span class="tag violet">Story 3 · Factory-river animation</span>
+            <h2>Where does the social cost go?</h2>
+            <p class="lead">Production, jobs, pollution, river health, community harm, and monitoring cost change with the selected legal instrument.</p>
           </div>
         </div>
-
-        <div class="synthesis-grid">
-          <div class="lesson">
-            <h3>1. Law allocates scarcity.</h3>
-            <p>
-              When resources are limited, rules decide access, exclusion, priority, and distribution.
-            </p>
+        <div class="two-col">
+          <div class="visual-wrap">
+            <canvas id="factoryCanvas"></canvas>
+            <div class="visual-label" id="factoryLabel">Select a pollution rule on the previous screen or use the choices below.</div>
           </div>
-
-          <div class="lesson">
-            <h3>2. Law changes incentives.</h3>
-            <p>
-              People respond to costs, benefits, sanctions, defaults, and enforcement design.
-            </p>
-          </div>
-
-          <div class="lesson">
-            <h3>3. Enforcement matters.</h3>
-            <p>
-              A severe penalty may fail if the probability of being caught is too low.
-            </p>
-          </div>
-
-          <div class="lesson">
-            <h3>4. Rules create trade-offs.</h3>
-            <p>
-              A rule may improve compliance but increase cost, reduce convenience, or invite evasion.
-            </p>
-          </div>
-
-          <div class="lesson">
-            <h3>5. Externalities justify intervention.</h3>
-            <p>
-              Law can shift social costs back to the party that causes them.
-            </p>
-          </div>
-
-          <div class="lesson">
-            <h3>6. Good legal design asks consequences.</h3>
-            <p>
-              The question is not only “Is this rule valid?” but also “What will this rule do?”
-            </p>
+          <div class="dashboard">
+            <h3>Factory-River Dashboard</h3>
+            <div id="factoryMetrics"></div>
           </div>
         </div>
+        <div class="choices" id="pollutionChoices2"></div>
+      </div>
+    </section>
 
-        <div class="big-question">
-          Final question for class: What makes a legal rule “good” — fairness, efficiency,
-          low cost, high compliance, or some balance among them?
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag violet">Story 3 · Cost-bearer dashboard</span>
+            <h2>Costs do not disappear.</h2>
+            <p class="lead">The law can leave costs with victims, shift them to the factory, impose monitoring costs on the state, or reduce production and jobs.</p>
+          </div>
         </div>
+        <div class="result visible" id="pollutionDeepResult"></div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Legal instrument</th><th>How it works</th><th>Main advantage</th><th>Main risk</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Fault-based liability</td><td>Victims prove negligence</td><td>Protects useful activity from excessive liability</td><td>Victims may remain uncompensated</td></tr>
+              <tr><td>Strict liability</td><td>Harm-causer pays for harm caused</td><td>Strong prevention incentive</td><td>May discourage useful activity</td></tr>
+              <tr><td>Safety regulation</td><td>State sets standards</td><td>Clear compliance rule</td><td>Requires information, expertise, and monitoring</td></tr>
+              <tr><td>Pollution tax</td><td>Pollution is priced</td><td>Flexible compliance</td><td>Requires measurement and collection capacity</td></tr>
+              <tr><td>Complete ban</td><td>Activity is prohibited near the river</td><td>Strong environmental protection</td><td>Risk of overregulation and loss of useful activity</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="idea-box">An externality is not a cost that disappears; it is a cost that law places on someone.</div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag">Deeper synthesis</span>
+            <h2>The same structure appeared everywhere.</h2>
+            <p class="lead">Different legal problems, same analytical movement: rule, incentive, response, cost, trade-off.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Story</th><th>Legal rule changed</th><th>Behavioural response</th><th>Hidden trade-off</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Parking</td><td>Access to scarce slots</td><td>Queueing, bidding, exaggeration, trading</td><td>Fairness versus efficiency</td></tr>
+              <tr><td>Speeding</td><td>Cost of violating traffic law</td><td>Compliance, gambling, avoidance, slowing down</td><td>Deterrence versus enforcement cost and convenience</td></tr>
+              <tr><td>Pollution</td><td>Cost of environmental harm</td><td>Prevention, production reduction, evasion, compliance</td><td>Victim protection versus production and monitoring cost</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="idea-box">Law and economics gives a method: identify the rule, predict the incentive, observe the behavioural response, and evaluate the trade-off.</div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag">Deeper synthesis</span>
+            <h2>Four questions for any legal rule</h2>
+            <p class="lead">The stories can be converted into a general method for analysing legal design.</p>
+          </div>
+        </div>
+        <div class="comparison-grid">
+          <div class="mini-card"><h3>1. Incentives</h3><p>What behaviour does the rule encourage, discourage, or make more costly?</p></div>
+          <div class="mini-card"><h3>2. Cost-bearer</h3><p>Who bears the cost: individuals, firms, victims, government, consumers, workers, or future users?</p></div>
+          <div class="mini-card"><h3>3. Information</h3><p>Who has the information needed to comply, verify, monitor, or enforce?</p></div>
+          <div class="mini-card"><h3>4. Unintended consequences</h3><p>What forms of gaming, evasion, overuse, underuse, or strategic behaviour may arise?</p></div>
+          <div class="mini-card"><h3>5. Institutional capacity</h3><p>Can the court, regulator, police, administration, or market actually operate the rule?</p></div>
+          <div class="mini-card"><h3>6. Trade-off</h3><p>What must be sacrificed to achieve the desired outcome?</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag">Deeper synthesis</span>
+            <h2>The rule-design trade-off model</h2>
+            <p class="lead">A rule can be efficient but unfair, fair but expensive, strict but poorly enforced, or simple but easy to game.</p>
+          </div>
+        </div>
+        <div class="triangle-wrap">
+          <div class="trade-square">
+            <div class="trade-node n1">Efficiency</div>
+            <div class="trade-node n2">Fairness</div>
+            <div class="trade-node n3">Compliance</div>
+            <div class="trade-node n4">Administrative Feasibility</div>
+            <div class="center-note">Legal design is rarely about finding a perfect rule. It is usually about choosing the least problematic trade-off.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag">Deeper synthesis</span>
+            <h2>From doctrinal thinking to design thinking</h2>
+            <p class="lead">The ordinary legal question remains important, but law and economics adds a consequence-oriented question.</p>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Doctrinal question</th><th>Law-and-economics question</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>What does the rule say?</td><td>What does the rule do?</td></tr>
+              <tr><td>Is there liability?</td><td>Who bears the cost of harm?</td></tr>
+              <tr><td>Is punishment authorised?</td><td>Will punishment deter?</td></tr>
+              <tr><td>Is the rule valid?</td><td>Is the rule administratively workable?</td></tr>
+              <tr><td>What right exists?</td><td>What incentives does the right create?</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="idea-box">Doctrinal reasoning tells us whether a rule exists and how it applies. Law-and-economics reasoning studies what happens when that rule operates in the real world.</div>
+      </div>
+    </section>
+
+    <section class="screen">
+      <div class="card">
+        <div class="screen-head">
+          <div>
+            <span class="tag yellow">Concluding synthesis</span>
+            <h2>What law and economics teaches us</h2>
+            <p class="lead">The three stories converge on a single idea: legal rules are instruments that structure behaviour and distribute costs.</p>
+          </div>
+        </div>
+        <div class="conclusion-list">
+          <div class="lesson"><h3>1. Law allocates scarce resources.</h3><p>Parking slots, road safety, clean rivers, court time, attention, land, and public funds are all scarce.</p></div>
+          <div class="lesson"><h3>2. Law changes the cost of behaviour.</h3><p>Fines, damages, taxes, liability, permissions, duties, and design requirements alter incentives.</p></div>
+          <div class="lesson"><h3>3. People respond strategically.</h3><p>They queue, bid, comply, gamble, evade, exaggerate, bargain, relocate, or redesign conduct.</p></div>
+          <div class="lesson"><h3>4. Enforcement is part of the rule.</h3><p>A rule that cannot be monitored or enforced may produce little behavioural change.</p></div>
+          <div class="lesson"><h3>5. Costs do not disappear.</h3><p>Law decides whether costs fall on victims, wrongdoers, consumers, taxpayers, workers, or future users.</p></div>
+          <div class="lesson"><h3>6. Every legal rule involves trade-offs.</h3><p>The central task is not to find a magic rule, but to understand the consequences of choosing one rule over another.</p></div>
+        </div>
+        <div class="big-question">The law-and-economics question is not only: “What is the rule?” It is also: “What happens because of the rule?”</div>
       </div>
     </section>
   </main>
 
-  <footer>
-    © Anshuman Sahoo 2026 · The Rule Machine · Law and Economics Lab
-  </footer>
+  <footer>© Anshuman Sahoo 2026 · The Rule Machine · Law and Economics Lab</footer>
 
   <script>
-    const screens = Array.from(document.querySelectorAll(".screen"));
-    let currentScreen = 0;
+    const screens = Array.from(document.querySelectorAll('.screen'));
+    let current = 0;
 
     const parkingRules = [
       {
-        id: "fcfs",
-        label: "A. First-come, first-served",
-        desc: "Students who arrive earliest get parking.",
-        scores: {
-          Efficiency: 55,
-          Fairness: 38,
-          "Administrative Cost": 18,
-          "Strategic Behaviour": 82,
-          Satisfaction: 52
-        },
-        explanation:
-          "This rule is easy to administer, but it may reward those who can arrive early rather than those who need parking most.",
-        teaching:
-          "Scarcity creates allocation problems. Even a simple rule can change behaviour: students may start arriving unnecessarily early only to secure parking."
+        id: 'fcfs', label: 'A. First-come, first-served', desc: 'The first 40 applicants get parking.',
+        metrics: { Efficiency: 55, Fairness: 38, 'Administrative Cost': 18, 'Strategic Behaviour': 82, Satisfaction: 52 },
+        selectedText: 'This rule is simple and cheap, but it rewards arrival timing rather than need or best use.',
+        visual: 'Queue forms; the first 40 cars enter.',
+        response: 'Students begin arriving unnecessarily early. Time becomes the hidden price of access.',
+        idea: 'First-come rules appear neutral, but they may reward those best placed to wait, queue, or arrive early.'
       },
       {
-        id: "auction",
-        label: "B. Auction",
-        desc: "Parking goes to those willing to pay the most.",
-        scores: {
-          Efficiency: 82,
-          Fairness: 32,
-          "Administrative Cost": 42,
-          "Strategic Behaviour": 44,
-          Satisfaction: 36
-        },
-        explanation:
-          "An auction may allocate slots to those who value them highly, but it favours those with greater ability to pay.",
-        teaching:
-          "Efficiency and fairness may diverge. A rule can be economically efficient yet distributively controversial."
+        id: 'auction', label: 'B. Auction', desc: 'Slots go to those willing to pay the most.',
+        metrics: { Efficiency: 82, Fairness: 32, 'Administrative Cost': 42, 'Strategic Behaviour': 44, Satisfaction: 36 },
+        selectedText: 'This may allocate slots to those who value them highly, but ability to pay becomes decisive.',
+        visual: 'Money symbols appear; high bidders enter first.',
+        response: 'Wealthier users dominate access. The monetary price replaces queueing as the allocation mechanism.',
+        idea: 'A rule may be economically efficient in one sense while still creating distributive objections.'
       },
       {
-        id: "lottery",
-        label: "C. Lottery",
-        desc: "Slots are randomly allotted.",
-        scores: {
-          Efficiency: 48,
-          Fairness: 72,
-          "Administrative Cost": 24,
-          "Strategic Behaviour": 28,
-          Satisfaction: 62
-        },
-        explanation:
-          "A lottery treats applicants equally but may allocate slots to people who need them less.",
-        teaching:
-          "Equal treatment is not always the same as efficient use. Law often chooses between different meanings of fairness."
+        id: 'lottery', label: 'C. Lottery', desc: 'Slots are randomly allotted.',
+        metrics: { Efficiency: 48, Fairness: 72, 'Administrative Cost': 24, 'Strategic Behaviour': 28, Satisfaction: 62 },
+        selectedText: 'This treats applicants equally, but slots may go to people who do not need them most.',
+        visual: 'Dice rolls; cars are selected randomly.',
+        response: 'Some students apply even when their need is weak because the cost of applying is low.',
+        idea: 'Equal chance is not always the same as efficient use or need-sensitive allocation.'
       },
       {
-        id: "need",
-        label: "D. Need-based allocation",
-        desc: "Priority for persons with disabilities, faculty on duty, and distant commuters.",
-        scores: {
-          Efficiency: 68,
-          Fairness: 84,
-          "Administrative Cost": 62,
-          "Strategic Behaviour": 58,
-          Satisfaction: 70
-        },
-        explanation:
-          "Need-based allocation may be more substantively fair, but it requires verification and may invite strategic claims.",
-        teaching:
-          "A more refined rule may improve fairness but also increase administrative cost and verification problems."
+        id: 'need', label: 'D. Need-based allocation', desc: 'Priority for disability, official duty, and long-distance commuting.',
+        metrics: { Efficiency: 68, Fairness: 84, 'Administrative Cost': 62, 'Strategic Behaviour': 58, Satisfaction: 70 },
+        selectedText: 'This targets relevant need, but requires verification and administration.',
+        visual: 'Priority badges appear; selected cars enter.',
+        response: 'Some applicants may exaggerate need. The administration must verify claims.',
+        idea: 'A more refined rule can improve fairness, but it may increase information and verification costs.'
       },
       {
-        id: "rotation",
-        label: "E. Monthly rotation",
-        desc: "Everyone gets access for some part of the semester.",
-        scores: {
-          Efficiency: 54,
-          Fairness: 76,
-          "Administrative Cost": 48,
-          "Strategic Behaviour": 32,
-          Satisfaction: 68
-        },
-        explanation:
-          "Rotation spreads access across users but may not match parking slots with those who need them most on a given day.",
-        teaching:
-          "Rotational rules can reduce conflict, but they may sacrifice precision and convenience."
+        id: 'rotation', label: 'E. Rotation system', desc: 'Everyone gets access for part of the semester.',
+        metrics: { Efficiency: 54, Fairness: 76, 'Administrative Cost': 48, 'Strategic Behaviour': 32, Satisfaction: 68 },
+        selectedText: 'This spreads access across applicants but may not match slots with highest need on a given day.',
+        visual: 'A calendar cycle appears; groups rotate into slots.',
+        response: 'Informal trading of slots may emerge as users try to match access with actual need.',
+        idea: 'Rotation reduces exclusion, but it can sacrifice precision and convenience.'
       }
     ];
 
     const speedRules = [
       {
-        id: "signs",
-        label: "A. Warning signs only",
-        desc: "The city puts up Drive Safe signs.",
-        metrics: {
-          speeding: 58,
-          accidents: 62,
-          enforcement: 8,
-          compliance: 42
-        },
-        explanation:
-          "Signs are cheap but weak. They may remind already careful drivers, but they impose little cost on violators.",
-        teaching:
-          "Information alone may be insufficient when the incentive to violate remains strong.",
-        overlay:
-          "Warning signs: low cost, weak deterrence."
+        id: 'signs', label: 'A. Warning signs only', desc: 'The city puts up Drive Safe signs.',
+        metrics: { 'Speeding Rate': 58, 'Accident Risk': 62, 'Enforcement Cost': 8, 'Compliance Level': 42, 'Public Convenience': 92 },
+        selectedText: 'Signs are inexpensive, but they do not substantially change the cost of speeding.',
+        visual: 'Warning signs appear; most cars continue at high speed.',
+        idea: 'Information alone may be weak when the incentive to violate remains strong.'
       },
       {
-        id: "lowFine",
-        label: "B. Low fine, low enforcement",
-        desc: "Fine of ₹500 with rare checking.",
-        metrics: {
-          speeding: 52,
-          accidents: 58,
-          enforcement: 18,
-          compliance: 48
-        },
-        explanation:
-          "A low fine with rare enforcement creates only a small expected cost. Many drivers may still take the risk.",
-        teaching:
-          "A legal rule may exist on paper but fail in practice if its expected cost is too low.",
-        overlay:
-          "Low fine + rare checking: some improvement, but weak deterrence."
+        id: 'lowfine', label: 'B. Low fine, low enforcement', desc: 'Fine of ₹500 with rare checking.',
+        metrics: { 'Speeding Rate': 52, 'Accident Risk': 58, 'Enforcement Cost': 18, 'Compliance Level': 48, 'Public Convenience': 88 },
+        selectedText: 'A low fine with rare checking creates a low expected cost of violation.',
+        visual: 'A few cars slow down; many still speed.',
+        idea: 'A rule may exist formally yet fail behaviourally if the expected cost is too low.'
       },
       {
-        id: "highFine",
-        label: "C. High fine, low enforcement",
-        desc: "Fine of ₹10,000 with rare checking.",
-        metrics: {
-          speeding: 39,
-          accidents: 46,
-          enforcement: 22,
-          compliance: 61
-        },
-        explanation:
-          "A high fine creates fear, but if checking is rare, many drivers may still gamble on not being caught.",
-        teaching:
-          "Severity alone is not enough. Deterrence also depends on the perceived probability of enforcement.",
-        overlay:
-          "High fine + rare checking: visible deterrence, but uneven enforcement."
+        id: 'highfine', label: 'C. High fine, low enforcement', desc: 'Fine of ₹10,000 with rare checking.',
+        metrics: { 'Speeding Rate': 39, 'Accident Risk': 46, 'Enforcement Cost': 22, 'Compliance Level': 61, 'Public Convenience': 84 },
+        selectedText: 'A high fine creates fear, but rare detection means many drivers still gamble.',
+        visual: 'Some cars slow down; others keep speeding because checkpoints are rare.',
+        idea: 'Severity alone is not enough; detection probability matters.'
       },
       {
-        id: "regular",
-        label: "D. Moderate fine, regular enforcement",
-        desc: "Fine of ₹2,000 with regular checking.",
-        metrics: {
-          speeding: 24,
-          accidents: 28,
-          enforcement: 66,
-          compliance: 76
-        },
-        explanation:
-          "Regular enforcement makes the legal rule credible. Drivers are more likely to comply because the chance of being caught is meaningful.",
-        teaching:
-          "Moderate penalties with credible enforcement can outperform severe penalties that are rarely enforced.",
-        overlay:
-          "Regular enforcement: stronger compliance, higher public cost."
+        id: 'regular', label: 'D. Moderate fine, regular enforcement', desc: 'Fine of ₹2,000 with regular checking.',
+        metrics: { 'Speeding Rate': 24, 'Accident Risk': 28, 'Enforcement Cost': 66, 'Compliance Level': 76, 'Public Convenience': 72 },
+        selectedText: 'Regular enforcement makes the rule credible and increases compliance.',
+        visual: 'Checkpoint appears frequently; many cars slow down.',
+        idea: 'Moderate penalties with credible enforcement can outperform severe but rarely enforced penalties.'
       },
       {
-        id: "design",
-        label: "E. Speed breakers and road design",
-        desc: "Physical road design makes speeding difficult.",
-        metrics: {
-          speeding: 15,
-          accidents: 20,
-          enforcement: 42,
-          compliance: 85
-        },
-        explanation:
-          "Design changes behaviour directly. Drivers slow down because the environment makes speeding difficult.",
-        teaching:
-          "Sometimes architecture can regulate behaviour more effectively than punishment alone.",
-        overlay:
-          "Road design: behaviour changes without constant policing."
+        id: 'design', label: 'E. Speed breakers and road design', desc: 'Physical design makes speeding difficult.',
+        metrics: { 'Speeding Rate': 15, 'Accident Risk': 20, 'Enforcement Cost': 42, 'Compliance Level': 85, 'Public Convenience': 58 },
+        selectedText: 'Road design changes behaviour directly, but it may reduce convenience.',
+        visual: 'Speed breakers appear; cars slow down automatically.',
+        idea: 'Sometimes the environment regulates behaviour more effectively than punishment alone.'
       }
     ];
 
-    const factoryRules = [
+    const pollutionRules = [
       {
-        id: "fault",
-        label: "A. No liability unless victims prove fault",
-        desc: "Victims must prove that the factory was negligent.",
-        scores: {
-          "Pollution Reduction": 24,
-          "Production Continuity": 88,
-          "Victim Protection": 26,
-          "Enforcement Cost": 52,
-          "Overregulation Risk": 18
-        },
-        explanation:
-          "This rule protects production but places a heavy burden on victims, who may struggle to prove negligence.",
-        teaching:
-          "If the cost of harm stays with victims, the factory may not fully internalise the social cost of pollution."
+        id: 'fault', label: 'A. Fault-based liability', desc: 'Victims must prove that the factory was negligent.',
+        metrics: { Production: 88, Jobs: 82, Pollution: 78, 'River Health': 24, 'Community Harm': 82, 'Monitoring Cost': 46 },
+        cost: { 'Factory Cost': 22, 'Victim/Community Cost': 84, 'Government Cost': 48, 'Worker/Local Economy Cost': 18, 'Environmental Harm': 82 },
+        selectedText: 'Production remains high, but victims may struggle to prove fault and obtain compensation.',
+        visual: 'Factory output remains strong; the river worsens.',
+        idea: 'When victims bear much of the cost, the factory may not fully internalise the social cost of pollution.'
       },
       {
-        id: "strict",
-        label: "B. Strict liability",
-        desc: "The factory must pay for harm caused, even if it took precautions.",
-        scores: {
-          "Pollution Reduction": 76,
-          "Production Continuity": 58,
-          "Victim Protection": 82,
-          "Enforcement Cost": 56,
-          "Overregulation Risk": 46
-        },
-        explanation:
-          "Strict liability gives the factory a strong incentive to reduce harm because it must pay for damage caused.",
-        teaching:
-          "Liability rules can force actors to internalise costs that would otherwise be imposed on others."
+        id: 'strict', label: 'B. Strict liability', desc: 'Factory pays for harm caused, even if it took precautions.',
+        metrics: { Production: 62, Jobs: 60, Pollution: 34, 'River Health': 68, 'Community Harm': 32, 'Monitoring Cost': 55 },
+        cost: { 'Factory Cost': 78, 'Victim/Community Cost': 28, 'Government Cost': 48, 'Worker/Local Economy Cost': 45, 'Environmental Harm': 34 },
+        selectedText: 'The factory has a strong incentive to prevent harm because it must pay for damage caused.',
+        visual: 'Smoke reduces; factory cost rises.',
+        idea: 'Liability can shift costs to the harm-causer and create prevention incentives.'
       },
       {
-        id: "regulation",
-        label: "C. Safety regulation",
-        desc: "The government prescribes specific pollution-control standards.",
-        scores: {
-          "Pollution Reduction": 66,
-          "Production Continuity": 62,
-          "Victim Protection": 64,
-          "Enforcement Cost": 78,
-          "Overregulation Risk": 52
-        },
-        explanation:
-          "Regulation can set clear standards, but it requires monitoring, expertise, and administrative capacity.",
-        teaching:
-          "Command-and-control regulation works best when the regulator has sufficient information and enforcement capacity."
+        id: 'regulation', label: 'C. Safety regulation', desc: 'Government prescribes pollution-control standards.',
+        metrics: { Production: 64, Jobs: 62, Pollution: 42, 'River Health': 62, 'Community Harm': 42, 'Monitoring Cost': 78 },
+        cost: { 'Factory Cost': 58, 'Victim/Community Cost': 42, 'Government Cost': 78, 'Worker/Local Economy Cost': 42, 'Environmental Harm': 42 },
+        selectedText: 'Standards can reduce pollution, but they require expertise, monitoring, and enforcement capacity.',
+        visual: 'Pollution falls; government monitoring rises.',
+        idea: 'Regulation depends heavily on administrative information and capacity.'
       },
       {
-        id: "tax",
-        label: "D. Pollution tax",
-        desc: "The factory pays according to the amount of pollution caused.",
-        scores: {
-          "Pollution Reduction": 70,
-          "Production Continuity": 68,
-          "Victim Protection": 58,
-          "Enforcement Cost": 72,
-          "Overregulation Risk": 36
-        },
-        explanation:
-          "A pollution tax makes pollution costly while allowing the factory to decide how best to reduce it.",
-        teaching:
-          "Price-based regulation changes incentives without dictating the exact method of compliance."
+        id: 'tax', label: 'D. Pollution tax', desc: 'Factory pays according to the amount of pollution caused.',
+        metrics: { Production: 68, Jobs: 66, Pollution: 36, 'River Health': 64, 'Community Harm': 40, 'Monitoring Cost': 70 },
+        cost: { 'Factory Cost': 68, 'Victim/Community Cost': 44, 'Government Cost': 70, 'Worker/Local Economy Cost': 38, 'Environmental Harm': 38 },
+        selectedText: 'Pollution becomes costly, while the factory can choose how to reduce it.',
+        visual: 'Pollution reduces gradually; tax and monitoring indicators rise.',
+        idea: 'Price-based regulation changes incentives without dictating the exact method of compliance.'
       },
       {
-        id: "ban",
-        label: "E. Complete ban near the river",
-        desc: "The factory cannot operate near the river.",
-        scores: {
-          "Pollution Reduction": 95,
-          "Production Continuity": 12,
-          "Victim Protection": 86,
-          "Enforcement Cost": 44,
-          "Overregulation Risk": 88
-        },
-        explanation:
-          "A ban may strongly protect the river, but it may also eliminate useful production and employment.",
-        teaching:
-          "The strongest rule is not always the best rule. Legal design requires attention to proportionality and trade-offs."
+        id: 'ban', label: 'E. Complete ban', desc: 'Factory cannot operate near the river.',
+        metrics: { Production: 12, Jobs: 18, Pollution: 5, 'River Health': 92, 'Community Harm': 16, 'Monitoring Cost': 42 },
+        cost: { 'Factory Cost': 92, 'Victim/Community Cost': 18, 'Government Cost': 42, 'Worker/Local Economy Cost': 86, 'Environmental Harm': 8 },
+        selectedText: 'Environmental harm falls sharply, but production and jobs also fall sharply.',
+        visual: 'Smoke disappears; factory output and jobs collapse.',
+        idea: 'The strongest rule may not be the best rule if it creates disproportionate collateral cost.'
       }
     ];
 
-    function updateSlideCount() {
-      document.getElementById("slideCount").textContent =
-        `${currentScreen + 1} / ${screens.length}`;
+    let selectedParking = parkingRules[0];
+    let selectedSpeed = speedRules[0];
+    let selectedPollution = pollutionRules[0];
+
+    function updateCounter() {
+      document.getElementById('counter').textContent = `${current + 1} / ${screens.length}`;
     }
 
-    function showScreen(index) {
-      screens[currentScreen].classList.remove("active");
-      currentScreen = Math.max(0, Math.min(index, screens.length - 1));
-      screens[currentScreen].classList.add("active");
-      updateSlideCount();
-
-      if (currentScreen === 3) {
-        resizeCanvas();
-      }
+    function show(index) {
+      screens[current].classList.remove('active');
+      current = Math.max(0, Math.min(index, screens.length - 1));
+      screens[current].classList.add('active');
+      updateCounter();
+      resizeAll();
+      if (current === 4) renderParkingDeep();
+      if (current === 11) renderPollutionDeep();
     }
 
-    function nextScreen() {
-      showScreen(currentScreen + 1);
+    function go(step) { show(current + step); }
+
+    function resetAll() {
+      selectedParking = parkingRules[0];
+      selectedSpeed = speedRules[0];
+      selectedPollution = pollutionRules[0];
+      document.querySelectorAll('.choice').forEach(b => b.classList.remove('selected'));
+      selectParking(selectedParking, false);
+      selectSpeed(selectedSpeed, false);
+      selectPollution(selectedPollution, false);
+      resetControlSliders();
+      show(0);
     }
 
-    function previousScreen() {
-      showScreen(currentScreen - 1);
-    }
-
-    function resetLab() {
-      document.querySelectorAll(".choice").forEach(btn => btn.classList.remove("selected"));
-      document.querySelectorAll(".result-panel").forEach(panel => {
-        if (panel.id !== "speedResult") {
-          panel.classList.remove("visible");
-          panel.innerHTML = "";
-        }
-      });
-
-      document.getElementById("speedResult").innerHTML = `
-        <div class="result-head">
-          <div>
-            <h3>Baseline road condition</h3>
-            <p>
-              Many drivers speed because the perceived cost of speeding is low.
-              Choose a rule below and observe how incentives change.
-            </p>
-          </div>
-        </div>
-      `;
-
-      setSpeedMetrics({
-        speeding: 65,
-        accidents: 70,
-        enforcement: 10,
-        compliance: 35
-      });
-
-      document.getElementById("simOverlay").textContent =
-        "Select a rule to watch the road behaviour change.";
-
-      showScreen(0);
-    }
-
-    function makeChoices(containerId, rules, onSelect) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-
+    function makeChoices(containerId, rules, selectFn, getSelected) {
+      const el = document.getElementById(containerId);
+      el.innerHTML = '';
       rules.forEach(rule => {
-        const btn = document.createElement("button");
-        btn.className = "choice";
-        btn.innerHTML = `
-          <strong>${rule.label}</strong>
-          <span>${rule.desc}</span>
-        `;
-        btn.addEventListener("click", () => {
-          Array.from(container.children).forEach(child => child.classList.remove("selected"));
-          btn.classList.add("selected");
-          onSelect(rule);
-        });
-        container.appendChild(btn);
+        const b = document.createElement('button');
+        b.className = 'choice';
+        if (getSelected().id === rule.id) b.classList.add('selected');
+        b.innerHTML = `<strong>${rule.label}</strong><span>${rule.desc}</span>`;
+        b.addEventListener('click', () => selectFn(rule, true));
+        el.appendChild(b);
       });
     }
 
-    function renderResult(panelId, rule, scoreObject) {
-      const panel = document.getElementById(panelId);
-      panel.classList.add("visible");
+    function refreshChoices() {
+      makeChoices('parkingChoices', parkingRules, selectParking, () => selectedParking);
+      makeChoices('parkingChoices2', parkingRules, selectParking, () => selectedParking);
+      makeChoices('speedChoices', speedRules, selectSpeed, () => selectedSpeed);
+      makeChoices('speedChoices2', speedRules, selectSpeed, () => selectedSpeed);
+      makeChoices('pollutionChoices', pollutionRules, selectPollution, () => selectedPollution);
+      makeChoices('pollutionChoices2', pollutionRules, selectPollution, () => selectedPollution);
+    }
 
-      const bars = Object.entries(scoreObject).map(([key, value]) => `
+    function renderBars(targetId, metrics) {
+      const el = document.getElementById(targetId);
+      el.innerHTML = Object.entries(metrics).map(([k,v]) => `
+        <div class="metric">
+          <div class="metric-top"><span>${k}</span><span>${v}%</span></div>
+          <div class="meter"><div style="width:${v}%"></div></div>
+        </div>`).join('');
+    }
+
+    function resultHTML(rule, metrics) {
+      const bars = Object.entries(metrics).map(([k,v]) => `
         <div class="bar-row">
-          <div class="bar-label">
-            <span>${key}</span>
-            <span>${value}%</span>
-          </div>
-          <div class="bar-bg">
-            <div class="bar-fill" data-width="${value}"></div>
-          </div>
-        </div>
-      `).join("");
+          <div class="bar-label"><span>${k}</span><span>${v}%</span></div>
+          <div class="bar-bg"><div class="bar-fill" data-width="${v}"></div></div>
+        </div>`).join('');
+      return `<h3>${rule.label}</h3><p>${rule.selectedText}</p><div class="status-pill">Visual response: ${rule.visual}</div><div class="bars">${bars}</div><div class="idea-box">${rule.idea}</div>`;
+    }
 
-      panel.innerHTML = `
-        <div class="result-head">
-          <div>
-            <h3>${rule.label}</h3>
-            <p>${rule.explanation}</p>
-          </div>
-        </div>
-
-        <div class="bars">
-          ${bars}
-        </div>
-
-        <div class="teaching-point">
-          <strong>Teaching point:</strong> ${rule.teaching}
-        </div>
-      `;
-
+    function animateResultBars(container) {
       requestAnimationFrame(() => {
-        panel.querySelectorAll(".bar-fill").forEach(fill => {
-          fill.style.width = fill.getAttribute("data-width") + "%";
-        });
+        container.querySelectorAll('.bar-fill').forEach(bar => bar.style.width = bar.dataset.width + '%');
       });
     }
 
-    makeChoices("parkingChoices", parkingRules, rule => {
-      renderResult("parkingResult", rule, rule.scores);
-    });
-
-    makeChoices("factoryChoices", factoryRules, rule => {
-      renderResult("factoryResult", rule, rule.scores);
-    });
-
-    makeChoices("speedChoices", speedRules, rule => {
-      setSpeedMetrics(rule.metrics);
-      document.getElementById("simOverlay").textContent = rule.overlay;
-
-      const panel = document.getElementById("speedResult");
-      panel.classList.add("visible");
-      panel.innerHTML = `
-        <div class="result-head">
-          <div>
-            <h3>${rule.label}</h3>
-            <p>${rule.explanation}</p>
-          </div>
-        </div>
-        <div class="teaching-point">
-          <strong>Teaching point:</strong> ${rule.teaching}
-        </div>
-      `;
-    });
-
-    function setSpeedMetrics(metrics) {
-      simState.targetSpeeding = metrics.speeding;
-      simState.targetAccidents = metrics.accidents;
-      simState.targetEnforcement = metrics.enforcement;
-      simState.targetCompliance = metrics.compliance;
-
-      updateMetric("Speeding", metrics.speeding);
-      updateMetric("Accidents", metrics.accidents);
-      updateMetric("Enforcement", metrics.enforcement);
-      updateMetric("Compliance", metrics.compliance);
+    function syncSelectedButtons() {
+      refreshChoices();
     }
 
-    function updateMetric(name, value) {
-      const labelMap = {
-        Speeding: "mSpeeding",
-        Accidents: "mAccidents",
-        Enforcement: "mEnforcement",
-        Compliance: "mCompliance"
-      };
-
-      const barMap = {
-        Speeding: "barSpeeding",
-        Accidents: "barAccidents",
-        Enforcement: "barEnforcement",
-        Compliance: "barCompliance"
-      };
-
-      document.getElementById(labelMap[name]).textContent = value + "%";
-      document.getElementById(barMap[name]).style.width = value + "%";
+    function selectParking(rule, showResult) {
+      selectedParking = rule;
+      syncSelectedButtons();
+      const res = document.getElementById('parkingChoiceResult');
+      res.innerHTML = resultHTML(rule, rule.metrics);
+      res.classList.add('visible');
+      animateResultBars(res);
+      document.getElementById('parkingLabel').textContent = rule.visual;
+      document.getElementById('parkingIdea').textContent = rule.idea;
+      renderBars('parkingMetrics', rule.metrics);
+      renderParkingDeep();
     }
 
-    const canvas = document.getElementById("roadCanvas");
-    const ctx = canvas.getContext("2d");
+    function selectSpeed(rule, showResult) {
+      selectedSpeed = rule;
+      syncSelectedButtons();
+      const res = document.getElementById('speedChoiceResult');
+      res.innerHTML = resultHTML(rule, rule.metrics);
+      res.classList.add('visible');
+      animateResultBars(res);
+      document.getElementById('roadLabel').textContent = rule.visual;
+      roadState.targetMetrics = rule.metrics;
+      renderBars('roadMetrics', rule.metrics);
+    }
 
-    const simState = {
-      targetSpeeding: 65,
-      targetAccidents: 70,
-      targetEnforcement: 10,
-      targetCompliance: 35,
-      cars: [],
-      flashes: [],
-      policePulse: 0
+    function selectPollution(rule, showResult) {
+      selectedPollution = rule;
+      syncSelectedButtons();
+      const res = document.getElementById('pollutionChoiceResult');
+      res.innerHTML = resultHTML(rule, rule.metrics);
+      res.classList.add('visible');
+      animateResultBars(res);
+      document.getElementById('factoryLabel').textContent = rule.visual;
+      factoryState.targetMetrics = rule.metrics;
+      renderBars('factoryMetrics', rule.metrics);
+      renderPollutionDeep();
+    }
+
+    function renderParkingDeep() {
+      const el = document.getElementById('parkingDeepResult');
+      el.innerHTML = `<h3>${selectedParking.label}</h3><p>${selectedParking.response}</p><div class="bars">${Object.entries(selectedParking.metrics).map(([k,v]) => `
+        <div class="bar-row"><div class="bar-label"><span>${k}</span><span>${v}%</span></div><div class="bar-bg"><div class="bar-fill" data-width="${v}"></div></div></div>`).join('')}</div><div class="idea-box">Allocation rules do not merely distribute scarce resources; they create incentives to queue, pay, apply, exaggerate, or trade.</div>`;
+      animateResultBars(el);
+    }
+
+    function renderPollutionDeep() {
+      const el = document.getElementById('pollutionDeepResult');
+      el.innerHTML = `<h3>${selectedPollution.label}</h3><p>${selectedPollution.selectedText}</p><div class="bars">${Object.entries(selectedPollution.cost).map(([k,v]) => `
+        <div class="bar-row"><div class="bar-label"><span>${k}</span><span>${v}%</span></div><div class="bar-bg"><div class="bar-fill" data-width="${v}"></div></div></div>`).join('')}</div>`;
+      animateResultBars(el);
+    }
+
+    const canvases = {
+      parking: document.getElementById('parkingCanvas'),
+      road: document.getElementById('roadCanvas'),
+      controlRoad: document.getElementById('controlRoadCanvas'),
+      factory: document.getElementById('factoryCanvas')
     };
 
-    function resizeCanvas() {
+    function fitCanvas(canvas) {
       const wrap = canvas.parentElement;
-      canvas.width = wrap.clientWidth * window.devicePixelRatio;
-      canvas.height = wrap.clientHeight * window.devicePixelRatio;
-      ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+      const ratio = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(wrap.clientWidth * ratio);
+      canvas.height = Math.floor(wrap.clientHeight * ratio);
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(ratio,0,0,ratio,0,0);
     }
 
-    window.addEventListener("resize", resizeCanvas);
+    function resizeAll() { Object.values(canvases).forEach(fitCanvas); }
+    window.addEventListener('resize', resizeAll);
 
-    function initCars() {
-      simState.cars = [];
-      for (let i = 0; i < 18; i++) {
-        simState.cars.push({
-          x: Math.random() * 900,
-          yLane: i % 3,
-          baseSpeed: 1.3 + Math.random() * 1.1,
-          length: 34 + Math.random() * 12,
-          speedBias: Math.random(),
-          wobble: Math.random() * Math.PI * 2
-        });
-      }
-    }
-
-    function drawRoad(w, h) {
-      ctx.fillStyle = "#020617";
-      ctx.fillRect(0, 0, w, h);
-
-      const roadY = h * 0.28;
-      const roadH = h * 0.48;
-
-      ctx.fillStyle = "#1f2937";
-      roundRect(ctx, w * 0.04, roadY, w * 0.92, roadH, 22, true, false);
-
-      ctx.strokeStyle = "rgba(255,255,255,0.35)";
-      ctx.lineWidth = 3;
-      ctx.setLineDash([28, 24]);
-
-      for (let i = 1; i <= 2; i++) {
-        const y = roadY + (roadH / 3) * i;
-        ctx.beginPath();
-        ctx.moveTo(w * 0.07, y);
-        ctx.lineTo(w * 0.93, y);
-        ctx.stroke();
-      }
-
-      ctx.setLineDash([]);
-
-      ctx.fillStyle = "rgba(34, 197, 94, 0.15)";
-      ctx.fillRect(0, 0, w, roadY - 12);
-      ctx.fillRect(0, roadY + roadH + 12, w, h - (roadY + roadH + 12));
-
-      ctx.fillStyle = "rgba(248,250,252,0.75)";
-      ctx.font = "700 16px system-ui";
-      ctx.fillText("City Road", w * 0.06, roadY - 24);
-    }
-
-    function drawCars(w, h) {
-      const roadY = h * 0.28;
-      const roadH = h * 0.48;
-      const laneH = roadH / 3;
-
-      const speedingProbability = simState.targetSpeeding / 100;
-
-      simState.cars.forEach(car => {
-        const isSpeeder = car.speedBias < speedingProbability;
-        const speedMultiplier = isSpeeder ? 2.2 : 1.05;
-        const speedReduction = 1 - (simState.targetCompliance / 100) * 0.35;
-        const speed = car.baseSpeed * speedMultiplier * speedReduction;
-
-        car.x += speed;
-        car.wobble += 0.03;
-
-        if (car.x > w + 60) {
-          car.x = -80 - Math.random() * 100;
-          car.speedBias = Math.random();
-        }
-
-        const y = roadY + laneH * car.yLane + laneH * 0.35 + Math.sin(car.wobble) * 1.5;
-
-        ctx.fillStyle = isSpeeder ? "#ef4444" : "#38bdf8";
-        roundRect(ctx, car.x, y, car.length, 20, 6, true, false);
-
-        ctx.fillStyle = "rgba(255,255,255,0.8)";
-        ctx.fillRect(car.x + 7, y + 4, 8, 5);
-        ctx.fillRect(car.x + car.length - 15, y + 4, 8, 5);
-
-        ctx.fillStyle = "#0f172a";
-        ctx.beginPath();
-        ctx.arc(car.x + 8, y + 21, 4, 0, Math.PI * 2);
-        ctx.arc(car.x + car.length - 8, y + 21, 4, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
-
-    function drawPolice(w, h) {
-      if (simState.targetEnforcement < 20) return;
-
-      const roadY = h * 0.28;
-      const roadH = h * 0.48;
-
-      const x = w * 0.78;
-      const y = roadY + roadH + 24;
-
-      simState.policePulse += 0.08;
-      const pulse = Math.sin(simState.policePulse) * 0.5 + 0.5;
-
-      ctx.fillStyle = "rgba(250,204,21,0.15)";
+    function rounded(ctx, x,y,w,h,r, fill=true, stroke=false) {
+      if (w < 2*r) r = w/2;
+      if (h < 2*r) r = h/2;
       ctx.beginPath();
-      ctx.arc(x + 30, y + 10, 28 + pulse * 12, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = "#f8fafc";
-      roundRect(ctx, x, y, 62, 28, 7, true, false);
-
-      ctx.fillStyle = "#0f172a";
-      ctx.font = "800 12px system-ui";
-      ctx.fillText("CHECK", x + 9, y + 18);
-
-      ctx.fillStyle = "#ef4444";
-      ctx.beginPath();
-      ctx.arc(x + 12, y - 4, 5, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = "#38bdf8";
-      ctx.beginPath();
-      ctx.arc(x + 50, y - 4, 5, 0, Math.PI * 2);
-      ctx.fill();
-    }
-
-    function maybeAccidentFlash(w, h) {
-      const chance = simState.targetAccidents / 100;
-
-      if (Math.random() < chance * 0.015) {
-        const roadY = h * 0.28;
-        const roadH = h * 0.48;
-        simState.flashes.push({
-          x: w * (0.18 + Math.random() * 0.64),
-          y: roadY + Math.random() * roadH,
-          life: 25
-        });
-      }
-
-      simState.flashes.forEach(flash => {
-        const alpha = flash.life / 25;
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = "#facc15";
-        ctx.beginPath();
-        for (let i = 0; i < 12; i++) {
-          const angle = (Math.PI * 2 * i) / 12;
-          const radius = i % 2 === 0 ? 24 : 9;
-          const x = flash.x + Math.cos(angle) * radius;
-          const y = flash.y + Math.sin(angle) * radius;
-          if (i === 0) ctx.moveTo(x, y);
-          else ctx.lineTo(x, y);
-        }
-        ctx.closePath();
-        ctx.fill();
-
-        ctx.fillStyle = "#ef4444";
-        ctx.font = "900 18px system-ui";
-        ctx.fillText("!", flash.x - 4, flash.y + 7);
-        ctx.restore();
-
-        flash.life -= 1;
-      });
-
-      simState.flashes = simState.flashes.filter(flash => flash.life > 0);
-    }
-
-    function drawLegend(w, h) {
-      const y = h - 42;
-      ctx.fillStyle = "rgba(2,6,23,0.72)";
-      roundRect(ctx, 18, y - 22, 390, 42, 14, true, false);
-
-      ctx.fillStyle = "#38bdf8";
-      roundRect(ctx, 34, y - 8, 28, 14, 4, true, false);
-      ctx.fillStyle = "rgba(248,250,252,0.85)";
-      ctx.font = "700 14px system-ui";
-      ctx.fillText("Compliant driver", 72, y + 4);
-
-      ctx.fillStyle = "#ef4444";
-      roundRect(ctx, 205, y - 8, 28, 14, 4, true, false);
-      ctx.fillStyle = "rgba(248,250,252,0.85)";
-      ctx.fillText("Speeding driver", 243, y + 4);
-    }
-
-    function animateRoad() {
-      const rect = canvas.getBoundingClientRect();
-      const w = rect.width;
-      const h = rect.height;
-
-      drawRoad(w, h);
-      drawCars(w, h);
-      drawPolice(w, h);
-      maybeAccidentFlash(w, h);
-      drawLegend(w, h);
-
-      requestAnimationFrame(animateRoad);
-    }
-
-    function roundRect(ctx, x, y, width, height, radius, fill, stroke) {
-      if (width < 2 * radius) radius = width / 2;
-      if (height < 2 * radius) radius = height / 2;
-
-      ctx.beginPath();
-      ctx.moveTo(x + radius, y);
-      ctx.arcTo(x + width, y, x + width, y + height, radius);
-      ctx.arcTo(x + width, y + height, x, y + height, radius);
-      ctx.arcTo(x, y + height, x, y, radius);
-      ctx.arcTo(x, y, x + width, y, radius);
+      ctx.moveTo(x+r,y);
+      ctx.arcTo(x+w,y,x+w,y+h,r);
+      ctx.arcTo(x+w,y+h,x,y+h,r);
+      ctx.arcTo(x,y+h,x,y,r);
+      ctx.arcTo(x,y,x+w,y,r);
       ctx.closePath();
-
       if (fill) ctx.fill();
       if (stroke) ctx.stroke();
     }
 
-    document.addEventListener("keydown", event => {
-      if (event.key === "ArrowRight") nextScreen();
-      if (event.key === "ArrowLeft") previousScreen();
-      if (event.key.toLowerCase() === "r") resetLab();
+    const parkingAnim = { t: 0 };
+    function drawParking() {
+      const c = canvases.parking;
+      const ctx = c.getContext('2d');
+      const rect = c.getBoundingClientRect();
+      const w = rect.width, h = rect.height;
+      parkingAnim.t += .012;
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = '#020617'; ctx.fillRect(0,0,w,h);
+
+      ctx.fillStyle = 'rgba(34,197,94,.10)';
+      rounded(ctx, w*.05, h*.12, w*.90, h*.72, 26, true, false);
+      ctx.strokeStyle = 'rgba(255,255,255,.18)'; ctx.lineWidth = 2;
+
+      const cols = 8, rows = 5;
+      const lotW = w*.78, lotH = h*.52;
+      const startX = w*.11, startY = h*.22;
+      const gapX = lotW / cols, gapY = lotH / rows;
+      for (let r=0;r<rows;r++) {
+        for (let col=0;col<cols;col++) {
+          const x = startX + col*gapX + gapX*.12;
+          const y = startY + r*gapY + gapY*.12;
+          ctx.strokeStyle = 'rgba(255,255,255,.22)';
+          rounded(ctx, x,y,gapX*.72,gapY*.65,8,false,true);
+        }
+      }
+
+      const progress = (Math.sin(parkingAnim.t*Math.PI*2 - Math.PI/2)+1)/2;
+      const fillCount = Math.min(40, Math.floor(progress*42));
+      let order = [...Array(40).keys()];
+      if (selectedParking.id === 'lottery') order = order.sort((a,b) => Math.sin(a*13.77)-Math.sin(b*13.77));
+      if (selectedParking.id === 'need') order = order.sort((a,b) => ((a%5===0)?-1:1) - ((b%5===0)?-1:1));
+      if (selectedParking.id === 'rotation') order = order.map((_,i)=> (i + Math.floor(parkingAnim.t*10))%40);
+
+      for (let i=0;i<fillCount;i++) {
+        const slot = order[i];
+        const r = Math.floor(slot/cols), col = slot%cols;
+        const x = startX + col*gapX + gapX*.22;
+        const y = startY + r*gapY + gapY*.25;
+        let color = '#38bdf8';
+        if (selectedParking.id === 'auction') color = '#facc15';
+        if (selectedParking.id === 'need' && slot%5===0) color = '#22c55e';
+        if (selectedParking.id === 'lottery') color = '#a78bfa';
+        ctx.fillStyle = color;
+        rounded(ctx,x,y,gapX*.52,gapY*.30,6,true,false);
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath(); ctx.arc(x+5,y+gapY*.31,3.4,0,Math.PI*2); ctx.arc(x+gapX*.50,y+gapY*.31,3.4,0,Math.PI*2); ctx.fill();
+      }
+
+      ctx.fillStyle = 'rgba(248,250,252,.85)';
+      ctx.font = '900 17px system-ui';
+      ctx.fillText('40 slots', w*.11, h*.16);
+      ctx.fillText('100 applicants', w*.68, h*.16);
+
+      if (selectedParking.id === 'fcfs') {
+        ctx.fillStyle = 'rgba(248,250,252,.18)';
+        for (let i=0;i<12;i++) rounded(ctx, w*.08 + i*18, h*.82 + Math.sin(parkingAnim.t*9+i)*4, 12, 12, 4, true, false);
+        ctx.fillStyle = 'rgba(248,250,252,.75)'; ctx.font = '800 14px system-ui'; ctx.fillText('Queue becomes the hidden price', w*.08, h*.91);
+      }
+      if (selectedParking.id === 'auction') {
+        ctx.fillStyle = '#facc15'; ctx.font = '900 28px system-ui';
+        for (let i=0;i<6;i++) ctx.fillText('₹', w*.72 + Math.sin(parkingAnim.t*5+i)*50, h*.35 + i*26);
+      }
+      if (selectedParking.id === 'lottery') {
+        ctx.fillStyle = '#ddd6fe'; ctx.font = '900 42px system-ui';
+        ctx.fillText('⚂', w*.76, h*.45 + Math.sin(parkingAnim.t*8)*8);
+      }
+      if (selectedParking.id === 'need') {
+        ctx.fillStyle = '#bbf7d0'; ctx.font = '900 30px system-ui';
+        ctx.fillText('✓', w*.76, h*.45); ctx.fillText('ID', w*.75, h*.54);
+      }
+      if (selectedParking.id === 'rotation') {
+        ctx.fillStyle = '#bae6fd'; ctx.font = '900 34px system-ui';
+        ctx.fillText('📅', w*.76, h*.48);
+      }
+      requestAnimationFrame(drawParking);
+    }
+
+    const roadState = {
+      targetMetrics: speedRules[0].metrics,
+      cars: [],
+      flashes: [],
+      t: 0
+    };
+
+    function initCars(state) {
+      state.cars = [];
+      for (let i=0;i<20;i++) {
+        state.cars.push({ x: Math.random()*900, lane: i%3, speedBias: Math.random(), base: 1.3 + Math.random()*1.2, len: 34 + Math.random()*12, wobble: Math.random()*6 });
+      }
+    }
+
+    function roadMetricsForControl() {
+      const fine = +document.getElementById('fineSlider').value;
+      const detect = +document.getElementById('detectSlider').value;
+      const enforce = +document.getElementById('enforceSlider').value;
+      const design = +document.getElementById('designSlider').value;
+      const fineEffect = Math.min(36, fine / 10000 * 36);
+      const detectionEffect = detect * .55;
+      const designEffect = design * .42;
+      const deterrence = Math.min(92, fineEffect + detectionEffect + designEffect + enforce * .12);
+      const speeding = Math.max(7, Math.round(78 - deterrence*.72));
+      const accidents = Math.max(5, Math.round(speeding*.85 - design*.08));
+      const compliance = Math.min(95, Math.round(100 - speeding + design*.06));
+      const publicConvenience = Math.max(38, Math.round(95 - design*.35 - enforce*.12));
+      return { 'Speeding Rate': speeding, 'Accident Risk': accidents, 'Enforcement Cost': enforce, 'Compliance Level': compliance, 'Public Convenience': publicConvenience };
+    }
+
+    function drawRoadOn(canvas, metrics, labelMode) {
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width, h = rect.height;
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = '#020617'; ctx.fillRect(0,0,w,h);
+      const roadY = h*.28, roadH = h*.46;
+      ctx.fillStyle = '#1f2937'; rounded(ctx,w*.04,roadY,w*.92,roadH,22,true,false);
+      ctx.strokeStyle = 'rgba(255,255,255,.32)'; ctx.lineWidth = 3; ctx.setLineDash([28,24]);
+      for (let i=1;i<=2;i++) { const y=roadY + roadH/3*i; ctx.beginPath(); ctx.moveTo(w*.07,y); ctx.lineTo(w*.93,y); ctx.stroke(); }
+      ctx.setLineDash([]);
+
+      const speeders = metrics['Speeding Rate']/100;
+      const compliance = metrics['Compliance Level']/100;
+      const designActive = selectedSpeed.id === 'design' || (labelMode === 'control' && +document.getElementById('designSlider').value > 45);
+
+      const cars = labelMode === 'control' ? controlRoadState.cars : roadState.cars;
+      cars.forEach(car => {
+        const isSpeeder = car.speedBias < speeders;
+        const speed = car.base * (isSpeeder ? 2.35 : 1.05) * (1 - compliance*.28) * (designActive ? .62 : 1);
+        car.x += speed;
+        car.wobble += .03;
+        if (car.x > w+60) { car.x = -80 - Math.random()*140; car.speedBias = Math.random(); }
+        const laneH = roadH/3;
+        const y = roadY + laneH*car.lane + laneH*.36 + Math.sin(car.wobble)*1.5;
+        ctx.fillStyle = isSpeeder ? '#ef4444' : '#38bdf8';
+        rounded(ctx,car.x,y,car.len,20,6,true,false);
+        ctx.fillStyle = 'rgba(255,255,255,.82)'; ctx.fillRect(car.x+7,y+4,8,5); ctx.fillRect(car.x+car.len-15,y+4,8,5);
+        ctx.fillStyle = '#0f172a'; ctx.beginPath(); ctx.arc(car.x+8,y+21,4,0,Math.PI*2); ctx.arc(car.x+car.len-8,y+21,4,0,Math.PI*2); ctx.fill();
+      });
+
+      if (metrics['Enforcement Cost'] > 20) {
+        const x = w*.76, y = roadY + roadH + 24;
+        const pulse = Math.sin(Date.now()/180)*.5+.5;
+        ctx.fillStyle = 'rgba(250,204,21,.15)'; ctx.beginPath(); ctx.arc(x+30,y+10,28+pulse*12,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#f8fafc'; rounded(ctx,x,y,66,30,8,true,false);
+        ctx.fillStyle = '#0f172a'; ctx.font = '900 12px system-ui'; ctx.fillText('CHECK', x+10, y+19);
+        ctx.fillStyle = '#ef4444'; ctx.beginPath(); ctx.arc(x+12,y-4,5,0,Math.PI*2); ctx.fill();
+        ctx.fillStyle = '#38bdf8'; ctx.beginPath(); ctx.arc(x+52,y-4,5,0,Math.PI*2); ctx.fill();
+      }
+
+      if (designActive) {
+        ctx.fillStyle = 'rgba(250,204,21,.82)';
+        for (let i=0;i<3;i++) rounded(ctx,w*(.28+i*.16), roadY+8, 18, roadH-16, 6, true, false);
+      }
+
+      const flashStore = labelMode === 'control' ? controlRoadState.flashes : roadState.flashes;
+      if (Math.random() < (metrics['Accident Risk']/100) * .013) {
+        flashStore.push({ x: w*(.18+Math.random()*.64), y: roadY + Math.random()*roadH, life: 24 });
+      }
+      flashStore.forEach(f => {
+        ctx.save(); ctx.globalAlpha = f.life/24;
+        ctx.fillStyle = '#facc15'; ctx.beginPath();
+        for (let i=0;i<12;i++) { const a=Math.PI*2*i/12; const rad=i%2?9:24; const x=f.x+Math.cos(a)*rad, y=f.y+Math.sin(a)*rad; if(!i) ctx.moveTo(x,y); else ctx.lineTo(x,y); }
+        ctx.closePath(); ctx.fill(); ctx.restore(); f.life--;
+      });
+      if (labelMode === 'control') controlRoadState.flashes = flashStore.filter(f=>f.life>0); else roadState.flashes = flashStore.filter(f=>f.life>0);
+
+      ctx.fillStyle = 'rgba(2,6,23,.72)'; rounded(ctx,18,h-60,390,42,14,true,false);
+      ctx.fillStyle = '#38bdf8'; rounded(ctx,34,h-46,28,14,4,true,false);
+      ctx.fillStyle = 'rgba(248,250,252,.88)'; ctx.font = '800 14px system-ui'; ctx.fillText('Compliant driver',72,h-34);
+      ctx.fillStyle = '#ef4444'; rounded(ctx,205,h-46,28,14,4,true,false);
+      ctx.fillStyle = 'rgba(248,250,252,.88)'; ctx.fillText('Speeding driver',243,h-34);
+    }
+
+    const controlRoadState = { cars: [], flashes: [] };
+    function drawRoads() {
+      drawRoadOn(canvases.road, selectedSpeed.metrics, 'normal');
+      drawRoadOn(canvases.controlRoad, roadMetricsForControl(), 'control');
+      requestAnimationFrame(drawRoads);
+    }
+
+    function resetControlSliders() {
+      document.getElementById('fineSlider').value = 2000;
+      document.getElementById('detectSlider').value = 30;
+      document.getElementById('enforceSlider').value = 45;
+      document.getElementById('designSlider').value = 20;
+      updateControlPanel();
+    }
+
+    function updateControlPanel() {
+      document.getElementById('fineVal').textContent = '₹' + Number(document.getElementById('fineSlider').value).toLocaleString('en-IN');
+      document.getElementById('detectVal').textContent = document.getElementById('detectSlider').value + '%';
+      document.getElementById('enforceVal').textContent = document.getElementById('enforceSlider').value + '%';
+      document.getElementById('designVal').textContent = document.getElementById('designSlider').value + '%';
+      renderBars('controlMetrics', roadMetricsForControl());
+    }
+
+    ['fineSlider','detectSlider','enforceSlider','designSlider'].forEach(id => document.getElementById(id).addEventListener('input', updateControlPanel));
+
+    const factoryState = { targetMetrics: pollutionRules[0].metrics, smoke: [] };
+    function drawFactory() {
+      const c = canvases.factory;
+      const ctx = c.getContext('2d');
+      const rect = c.getBoundingClientRect();
+      const w = rect.width, h = rect.height;
+      const m = selectedPollution.metrics;
+      ctx.clearRect(0,0,w,h);
+      ctx.fillStyle = '#020617'; ctx.fillRect(0,0,w,h);
+      ctx.fillStyle = 'rgba(34,197,94,.13)'; ctx.fillRect(0,h*.58,w,h*.42);
+      ctx.fillStyle = `rgba(56,189,248,${0.18 + m['River Health']/100*.34})`;
+      rounded(ctx,w*.05,h*.68,w*.90,h*.15,30,true,false);
+      const pollutionTint = m.Pollution/100;
+      ctx.fillStyle = `rgba(101, 67, 33, ${pollutionTint*.45})`;
+      rounded(ctx,w*.05,h*.68,w*.90,h*.15,30,true,false);
+
+      ctx.fillStyle = '#64748b'; rounded(ctx,w*.16,h*.37,w*.24,h*.21,8,true,false);
+      ctx.fillStyle = '#94a3b8'; rounded(ctx,w*.20,h*.29,w*.08,h*.15,5,true,false);
+      ctx.fillStyle = '#334155'; rounded(ctx,w*.31,h*.24,w*.05,h*.34,5,true,false);
+      ctx.fillStyle = '#facc15';
+      for (let i=0;i<4;i++) { ctx.fillRect(w*.18+i*w*.045,h*.43,w*.025,h*.035); }
+
+      if (selectedPollution.id !== 'ban') {
+        const smokeCount = Math.floor(m.Pollution/10)+1;
+        for (let i=0;i<smokeCount;i++) {
+          const t = (Date.now()/900 + i*.39)%1;
+          const x = w*.335 + Math.sin(t*6+i)*18;
+          const y = h*.24 - t*h*.20;
+          ctx.fillStyle = `rgba(148,163,184,${(1-t)*m.Pollution/110})`;
+          ctx.beginPath(); ctx.arc(x,y,12+t*18,0,Math.PI*2); ctx.fill();
+        }
+      } else {
+        ctx.strokeStyle = '#ef4444'; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.moveTo(w*.14,h*.35); ctx.lineTo(w*.43,h*.58); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(w*.43,h*.35); ctx.lineTo(w*.14,h*.58); ctx.stroke();
+      }
+
+      const fishCount = Math.floor(m['River Health']/12);
+      for (let i=0;i<fishCount;i++) {
+        const x = w*.12 + ((Date.now()/30 + i*77)%(w*.76));
+        const y = h*.735 + Math.sin(Date.now()/500+i)*12;
+        ctx.fillStyle = '#bae6fd';
+        ctx.beginPath(); ctx.ellipse(x,y,12,6,0,0,Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(x-12,y); ctx.lineTo(x-22,y-7); ctx.lineTo(x-22,y+7); ctx.closePath(); ctx.fill();
+      }
+
+      const workers = Math.floor(m.Jobs/12);
+      for (let i=0;i<workers;i++) {
+        const x = w*.50 + i*22;
+        const y = h*.54 + Math.sin(Date.now()/350+i)*3;
+        ctx.fillStyle = '#f8fafc'; ctx.beginPath(); ctx.arc(x,y,5,0,Math.PI*2); ctx.fill();
+        ctx.fillRect(x-4,y+6,8,16);
+      }
+
+      ctx.fillStyle = 'rgba(2,6,23,.72)'; rounded(ctx,w*.54,h*.20,w*.36,h*.25,18,true,false);
+      ctx.fillStyle = '#f8fafc'; ctx.font = '900 15px system-ui';
+      ctx.fillText('Production: ' + m.Production + '%', w*.58, h*.27);
+      ctx.fillText('Jobs: ' + m.Jobs + '%', w*.58, h*.33);
+      ctx.fillText('River health: ' + m['River Health'] + '%', w*.58, h*.39);
+
+      requestAnimationFrame(drawFactory);
+    }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'ArrowRight') go(1);
+      if (e.key === 'ArrowLeft') go(-1);
+      if (e.key.toLowerCase() === 'r') resetAll();
     });
 
-    updateSlideCount();
-    initCars();
-    resizeCanvas();
-    setSpeedMetrics({
-      speeding: 65,
-      accidents: 70,
-      enforcement: 10,
-      compliance: 35
-    });
-    animateRoad();
+    refreshChoices();
+    updateCounter();
+    resizeAll();
+    initCars(roadState); initCars(controlRoadState);
+    selectParking(selectedParking, false);
+    selectSpeed(selectedSpeed, false);
+    selectPollution(selectedPollution, false);
+    updateControlPanel();
+    drawParking();
+    drawRoads();
+    drawFactory();
   </script>
 </body>
 </html>
